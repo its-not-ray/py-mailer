@@ -31,9 +31,10 @@ def main():
     server.login(username, password)
     for x in range(1):
         server.send_message(msg) 
-        print("sending mail", x)
+        print("sent mail", x)
 
     server.quit()
+    print("done")
 
 class switches():
     def __init__(switch):
