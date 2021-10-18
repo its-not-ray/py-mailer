@@ -7,16 +7,13 @@ import time
 
 
 def main():
-# get target gmail
     to_address = input("Target gmail: ")
 
-# senders info
     username = set.senders_emails[0]
     password = set.senders_passwords[0]
     message_s = set.message_subject[0]
     message_b = set.message_content[0]
 
-# recievers info + mssg
     fromaddr = '' 
     msg =  EmailMessage()
     msg.set_content(message_b)
@@ -24,17 +21,14 @@ def main():
     msg['from'] = username
     msg['to'] = to_address
 
-# sending mail
     server = smtplib.SMTP('smtp.gmail.com', 587)  
     server.ehlo()
     server.starttls()
     server.login(username, password)
-    for x in range(1):
-        server.send_message(msg) 
-        print("sent mail", x)
-
-    server.quit()
+    server.send_message(msg) 
+    print("mail sent")
     print("done")
+    server.quit()
 
 class switches():
     def __init__(switch):
@@ -44,7 +38,6 @@ class switches():
 
 switch = switches()
 def reset_options():
-    # reset options
     switch.reset_all = False
     switch.reset_gmail = False
     switch.reset_content = False
@@ -63,13 +56,10 @@ def reset_options():
 def reset_set():
     reset_options()
     if switch.reset_all == True:
-    # taking input for reset
         gmail = input("gmail: ") 
         gmail_pass = input("password: ")
         mssg_sub = input("subject: ")
         mssg_content = input("body: ")
-
-    # changing input into correct format
         gmail = ('"{0}"'.format(gmail))
         gmail_pass = ('"{0}"'.format(gmail_pass))
         mssg_content = ('"{0}"'.format(mssg_content))
@@ -78,18 +68,15 @@ def reset_set():
         \n\n# supports multiple emails\nsenders_emails = [{gmail}]\nsenders_passwords = [{gmail_pass}]\n\n# supports multiple \
 messages\nmessage_content = [{mssg_content}]\nmessage_subject = [{mssg_sub}]"
 
-    # writing new settings
         file = open("set.py", "w")
         file.truncate()
         file.write(default_set)
         file.close()
     elif switch.reset_gmail == True:
-    # saving all needed data
         prevous_mssg = set.message_content[0]
         prevous_subj = set.message_subject[0]
         prevous_mssg = '"{0}"'.format(prevous_mssg)
         prevous_subj = '"{0}"'.format(prevous_subj)
-    # getting new data
         gmail = input("gmail: ") 
         gmail_pass = input("password: ")
         gmail = ('"{0}"'.format(gmail))
@@ -98,18 +85,15 @@ messages\nmessage_content = [{mssg_content}]\nmessage_subject = [{mssg_sub}]"
         \n\n# supports multiple emails\nsenders_emails = [{gmail}]\nsenders_passwords = [{gmail_pass}]\n\n# supports multiple \
 messages\nmessage_content = [{prevous_mssg}]\nmessage_subject = [{prevous_subj}]"
 
-    # writing new settigns
         file = open("set.py", "w")
         file.truncate()
         file.write(costom_set)
         file.close()
     elif switch.reset_content == True:
-    # saving all needed data
         prevous_gmail = set.senders_emails[0]
         prevous_pass = set.senders_passwords[0]
         prevous_gmail = '"{0}"'.format(prevous_gmail)
         prevous_pass = '"{0}"'.format(prevous_pass)
-    # getting new data
         mssg_sub = input("subject: ")
         mssg_content = input("body: ")
         mssg_content = ('"{0}"'.format(mssg_content))
@@ -117,23 +101,19 @@ messages\nmessage_content = [{prevous_mssg}]\nmessage_subject = [{prevous_subj}]
         costom_set = f"# THIS FILE IS NOT TO BE EXECUTED\n# THIS FILE IS TO BE EDITED ONLY FROM main.py\
         \n\n# supports multiple emails\nsenders_emails = [{prevous_gmail}]\nsenders_passwords = [{prevous_pass}]\n\n# supports multiple \
 messages\nmessage_content = [{mssg_content}]\nmessage_subject = [{mssg_sub}]"
-    # writing new settigns
         file = open("set.py", "w")
         file.truncate()
         file.write(costom_set)
         file.close()
 
-# usage
 NOA = len(sys.argv)
 if NOA == 1: # run script w\ current set
     print("Command not found\nFor help run: ./main -h")
 elif NOA == 2:
     if sys.argv[1] == "-execute":
         main()
-# get help
     elif sys.argv[1] == "-h": 
         print("usage:\nTo run script with old settings: ./main.py -execute\nTo change settings: ./main.py -r")
-# reset settings file
     elif sys.argv[1] == "-r": 
         reset_set()
     else:
