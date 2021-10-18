@@ -8,19 +8,16 @@ import time
 
 def main():
     to_address = input("Target gmail: ")
-
     username = set.senders_emails[0]
     password = set.senders_passwords[0]
     message_s = set.message_subject[0]
     message_b = set.message_content[0]
-
     fromaddr = '' 
     msg =  EmailMessage()
     msg.set_content(message_b)
     msg['Subject'] = message_s
     msg['from'] = username
     msg['to'] = to_address
-
     server = smtplib.SMTP('smtp.gmail.com', 587)  
     server.ehlo()
     server.starttls()
@@ -29,13 +26,11 @@ def main():
     print("mail sent")
     print("done")
     server.quit()
-
 class switches():
     def __init__(switch):
         switch.reset_all = False
         switch.reset_gmail = False
         switch.reset_content = False
-
 switch = switches()
 def reset_options():
     switch.reset_all = False
