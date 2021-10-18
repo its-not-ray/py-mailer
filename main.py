@@ -24,7 +24,6 @@ def main():
     server.login(username, password)
     server.send_message(msg) 
     print("mail sent")
-    print("done")
     server.quit()
 class switches():
     def __init__(switch):
