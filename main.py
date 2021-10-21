@@ -32,10 +32,14 @@ def main():
         exit()
 
 # senders info
-    username = set.senders_emails[0]
-    password = set.senders_passwords[0]
-    message_s = set.message_subject[0]
-    message_b = set.message_content[0]
+    try:
+        username = set.senders_emails[0]
+        password = set.senders_passwords[0]
+        message_s = set.message_subject[0]
+        message_b = set.message_content[0]
+    except:
+        print("set folder empty)
+        exit()
     valid_set_check(username, password)
 
 # recievers info + mssg
@@ -175,6 +179,7 @@ def show_set():
         print("current mssg content: ", set.message_content[0])
     except:
         print("Set folder empty")
+        exit()
 
 # screen fun time
 def fun_output(to_address):
