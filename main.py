@@ -1,21 +1,40 @@
 from email.message import EmailMessage
 from email import message
+from os import system, name
 import smtplib
 import shutil
+import signal
 import sys
 import set
 import time
 
-
+# main
 def main():
+
+# multi reciever option
+    #multi_account = False
+    #while True:
+    #    numberofaccounts = input("To how many accounts do you want to send this mail to? ")
+    #    if numberofaccounts.isnumeric() == True:
+    #        if int(numberofaccounts) > 10:
+    #            print("Max number allowed is 10.\n")
+    #        else:
+    #            break
+    #    else:
+    #        print("Please input an integer.\n")
+
 # get target gmail
     to_address = input("Target gmail: ")
+    if len(to_address) < 15:
+        print("gmail address not found.\nPlease input a valid gmail\n")
+        exit()
 
 # senders info
     username = set.senders_emails[0]
     password = set.senders_passwords[0]
     message_s = set.message_subject[0]
     message_b = set.message_content[0]
+    valid_set_check(username, password)
 
 # recievers info + mssg
     fromaddr = '' 
@@ -26,13 +45,23 @@ def main():
     msg['to'] = to_address
 
 # sending mail
-    server = smtplib.SMTP('smtp.gmail.com', 587)  
-    server.ehlo()
-    server.starttls()
-    server.login(username, password)
-    server.send_message(msg) 
-    server.quit()
-    fun_output(to_address)
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)  
+        server.ehlo()
+        server.starttls()
+    except:
+        print("Network error, please check your internet connection")
+        exit()
+    try:
+        server.login(username, password)
+        server.send_message(msg) 
+        server.quit()
+        fun_output(to_address)
+    except:
+        print("Error: This error could have been prompted due to:\n- The gmail you are trying to send this mail to is invalid.\n\
+- Authentication error, make sure you have (allow less secure applications \
+to access you account) turned on.\n- Make sure your username and password are correct.")
+        exit()
 
 class switches():
     def __init__(switch):
@@ -59,6 +88,19 @@ def reset_options():
         question = '"{0}"'.format(question)
         print("\nHAHAHAHAAHAHAHA ARE YOU BLIND? THERE IS NO", question, "OPTION\nIdiot")
 
+# checks if sender gmail and password are valid
+def valid_set_check(gmail, password):
+    if len(gmail) < 15 and len(password) < 5:
+        print("Invalid settings, sender credentials invalid.\n\n Try:\n- pthon3 main.py -set\n- 02")
+        exit()
+    elif len(gmail) < 15:
+        print("Invalid settings, sender gmail invalid\n\nTry:\n- pthon3 main.py -set\n- 02")
+        exit()
+    elif len(password) < 5:
+        print("Invalid settings, sender gmail password invalid\n\nTry:\n- pthon3 main.py -set\n- 02")
+        exit()
+
+# reset function for settings (independent reset settings available)
 def reset_set():
     reset_options()
     if switch.reset_all == True:
@@ -122,15 +164,17 @@ messages\nmessage_content = [{mssg_content}]\nmessage_subject = [{mssg_sub}]"
         file.write(costom_set)
         file.close()
 
+# prints out current settings for user
 def show_set():
     print("current sender email: ", set.senders_emails[0])
     print("current email password: ", set.senders_passwords[0])
     print("current mssg subj: ", set.message_subject[0])
     print("current mssg content: ", set.message_content[0])
 
+# screen fun time
 def fun_output(to_address):
     columns = shutil.get_terminal_size().columns
-    output = [" Thank you for using mail-sender!", "script by:", "its-not-ray on Github"]
+    output = [" Thank you for using mailer!", "script by:", "its-not-ray on Github"]
     temp = "##"
     print("\n\n")
     for x in range(6):
@@ -139,22 +183,43 @@ def fun_output(to_address):
     for x in range(3):
         print(output[x].center(columns))
 
+# terminal clear function
+def clear():
+    if name == "nt":
+        _ = system("cls")
+    else:
+        _ = system("clear")
+
+# exit function
+def byby():
+    def signal_handler(sig, frame):
+        clear()
+        print("I'll be waiting for you on the dark side...")
+        sys.exit(0)
+    
+    signal.signal(signal.SIGINT, signal_handler)
+byby()
+
 # usage
 NOA = len(sys.argv)
 if NOA == 1: # run script w\ current set
-    print("Command not found\nFor help run: ./main -h")
+    print("Command not found\nFor help run: ./mailer.py -h")
 elif NOA == 2:
     if sys.argv[1] == "-execute":
         main()
 # get help
     elif sys.argv[1] == "-h": 
-        print("DISCLAIMER: All command must start with, python3 ...\nusage:\nTo run script with old settings: ./main.py -execute\nTo change settings: ./main.py -set\nTo show current settings: ./main.py -show -set")
+        print("DISCLAIMER: All command must start with, python3 ./mailer.py...\nusage:\n-exec\
+ute (run script with old settings)\n-set (change settings)\n-show -set (show current settings)\
+\n--version (show py-mailer current version)")
 # reset settings file
     elif sys.argv[1] == "-set": 
         reset_set()
+    elif sys.argv[1] == "--version":
+        print("py-mailer v1.0")
     else:
-        print("For help run: ./main -h")
+        print("For help run: ./mailer.py -h")
 elif NOA == 3:
     if sys.argv[1] == "-show" and sys.argv[2] == "-set":
         show_set()
-
+        
