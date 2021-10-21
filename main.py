@@ -168,10 +168,13 @@ messages\nmessage_content = [{mssg_content}]\nmessage_subject = [{mssg_sub}]"
 
 # prints out current settings for user
 def show_set():
-    print("current sender email: ", set.senders_emails[0])
-    print("current email password: ", set.senders_passwords[0])
-    print("current mssg subj: ", set.message_subject[0])
-    print("current mssg content: ", set.message_content[0])
+    try:
+        print("current sender email: ", set.senders_emails[0])
+        print("current email password: ", set.senders_passwords[0])
+        print("current mssg subj: ", set.message_subject[0])
+        print("current mssg content: ", set.message_content[0])
+    except:
+        print("Set folder empty")
 
 # screen fun time
 def fun_output(to_address):
