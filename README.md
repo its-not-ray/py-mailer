@@ -1,4 +1,4 @@
-# mail-sender
+# py-mailer
 
 v: 1.0 (version)
 
