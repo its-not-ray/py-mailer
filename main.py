@@ -10,6 +10,8 @@ import time
 
 # main
 def main():
+    print("Disclamier:\nYour sender gmail needs to have (Access to less secure apps) enabled\nYou can check here:\
+ https://www.google.com/settings/security/lesssecureapps\n")
 
 # multi reciever option
     #multi_account = False
@@ -86,7 +88,7 @@ def reset_options():
         switch.reset_content = True
     else:
         question = '"{0}"'.format(question)
-        print("\nHAHAHAHAAHAHAHA ARE YOU BLIND? THERE IS NO", question, "OPTION\nIdiot")
+        print("\nNot even jay is that dumb...\nTHERE IS NO", question, "OPTION, Idiot!")
 
 # checks if sender gmail and password are valid
 def valid_set_check(gmail, password):
@@ -222,4 +224,3 @@ ute (run script with old settings)\n-set (change settings)\n-show -set (show cur
 elif NOA == 3:
     if sys.argv[1] == "-show" and sys.argv[2] == "-set":
         show_set()
-        
