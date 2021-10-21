@@ -38,7 +38,7 @@ def main():
         message_s = set.message_subject[0]
         message_b = set.message_content[0]
     except:
-        print("set folder empty)
+        print("set folder empty")
         exit()
     valid_set_check(username, password)
 
