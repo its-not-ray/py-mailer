@@ -8,6 +8,32 @@ import sys
 import set
 import time
 
+# custom instagram mail info
+class mssgs():
+    def __init__(self, toadress, username, subj, body):
+        self.toadtess = toadress
+        self.username = username
+        self.subj = subj
+        self.body = body
+mail = mssgs
+
+# manage phishing option details
+def phishing_input():
+    # basic info input
+    mail.username = input("target username: ")
+    mail.toadress = input("target gmail: ")
+    if len(mail.toadress) < 15:
+        print("gmail address not found.\nPlease input a valid gmail\n")
+        exit()
+    phishing_link = input("phishing link: ")
+
+    # fake mail details
+    mail.subj = f"{mail.username}, We've made it easy to get back on Instagram"
+    mail.body = f"Hi {mail.username},\nSorry to hear you're having trouble logging into Instagram. We got a message that you forgot \
+your password. If this was you, you can use the link bellow to reset your password.\n\n{phishing_link}\n\nIf you didn't request a password\
+ reset link you can ignore this message.\nOnly people who know your Instagram password can log into your account\n\nThis message was sent \
+to {mail.toadress} and intended for {mail.username}"
+
 # main
 def main():
     print("Disclamier:\nYour sender gmail needs to have (Access to less secure apps) enabled\nYou can check here:\
@@ -25,30 +51,65 @@ def main():
     #    else:
     #        print("Please input an integer.\n")
 
-# get target gmail
-    to_address = input("Target gmail: ")
-    if len(to_address) < 15:
-        print("gmail address not found.\nPlease input a valid gmail\n")
+# choose custom
+    switch.custom_Insta_message = False # insta set switch
+    switch.default_message = False # default set switch
+
+    question = input("Choose an option\n[01] Send custom mail\n[02] Send instagram phishing mail\n") # custom or set option
+    if question == "01" or question == "1": # default option
+        switch.default_message = True
+        switch.custom_Insta_message = False
+    elif question == "02" or question == "2": # instagram option
+        switch.custom_Insta_message = True
+        switch.default_message = False
+# incorrect input, exit
+    else:
+        question = '"{0}"'.format(question)
+        print("\nNot even jay is that dumb...\nTHERE IS NO", question, "OPTION, Idiot!")
         exit()
 
-# senders info
+# get target gmail or target instagram info depending on prevous option
+    if switch.default_message == True: # default option
+        to_address = input("Target gmail: ")
+        if len(to_address) < 15:
+            print("gmail address not found.\nPlease input a valid gmail\n")
+            exit()
+    elif switch.custom_Insta_message == True: # custom instagram option
+        phishing_input()
+
+# senders info + message info
     try:
         username = set.senders_emails[0]
         password = set.senders_passwords[0]
-        message_s = set.message_subject[0]
-        message_b = set.message_content[0]
+        if switch.default_message == True:
+            message_s = set.message_subject[0]
+            message_b = set.message_content[0]
+        elif switch.custom_Insta_message == True:
+            message_s = mail.subj
+            message_b = mail.body
+        else:
+            print("Something went wrong, please try again.")
+            exit()
     except:
         print("set folder empty")
         exit()
     valid_set_check(username, password)
 
 # recievers info + mssg
-    fromaddr = '' 
-    msg =  EmailMessage()
-    msg.set_content(message_b)
-    msg['Subject'] = message_s
-    msg['from'] = username
-    msg['to'] = to_address
+    if switch.default_message == True:
+        fromaddr = '' 
+        msg =  EmailMessage()
+        msg.set_content(message_b)
+        msg['Subject'] = message_s
+        msg['from'] = username
+        msg['to'] = to_address
+    elif switch.custom_Insta_message == True:
+        fromaddr = '' 
+        msg =  EmailMessage()
+        msg.set_content(mail.body)
+        msg['Subject'] = mail.subj
+        msg['from'] = mail.username
+        msg['to'] = mail.toadress
 
 # sending mail
     try:
@@ -62,7 +123,7 @@ def main():
         server.login(username, password)
         server.send_message(msg) 
         server.quit()
-        fun_output(to_address)
+        fun_output()
     except:
         print("Error: This error could have been prompted due to:\n- The gmail you are trying to send this mail to is invalid.\n\
 - Authentication error, make sure you have (allow less secure applications \
@@ -74,7 +135,8 @@ class switches():
         switch.reset_all = False
         switch.reset_gmail = False
         switch.reset_content = False
-
+        switch.custom_Insta_message = False
+        switch.default_message = False
 
 switch = switches()
 def reset_options():
@@ -93,6 +155,7 @@ def reset_options():
     else:
         question = '"{0}"'.format(question)
         print("\nNot even jay is that dumb...\nTHERE IS NO", question, "OPTION, Idiot!")
+        exit()
 
 # checks if sender gmail and password are valid
 def valid_set_check(gmail, password):
@@ -122,7 +185,7 @@ def reset_set():
         mssg_content = ('"{0}"'.format(mssg_content))
         mssg_sub = ('"{0}"'.format(mssg_sub))
         default_set = f"# THIS FILE IS NOT TO BE EXECUTED\n# THIS FILE IS TO BE EDITED ONLY FROM main.py\
-        \n\n# supports multiple emails\nsenders_emails = [{gmail}]\nsenders_passwords = [{gmail_pass}]\n\n# supports multiple \
+\n\n# supports multiple emails\nsenders_emails = [{gmail}]\nsenders_passwords = [{gmail_pass}]\n\n# supports multiple \
 messages\nmessage_content = [{mssg_content}]\nmessage_subject = [{mssg_sub}]"
 
     # writing new settings
@@ -142,7 +205,7 @@ messages\nmessage_content = [{mssg_content}]\nmessage_subject = [{mssg_sub}]"
         gmail = ('"{0}"'.format(gmail))
         gmail_pass = ('"{0}"'.format(gmail_pass))
         costom_set = f"# THIS FILE IS NOT TO BE EXECUTED\n# THIS FILE IS TO BE EDITED ONLY FROM main.py\
-        \n\n# supports multiple emails\nsenders_emails = [{gmail}]\nsenders_passwords = [{gmail_pass}]\n\n# supports multiple \
+\n\n# supports multiple emails\nsenders_emails = [{gmail}]\nsenders_passwords = [{gmail_pass}]\n\n# supports multiple \
 messages\nmessage_content = [{prevous_mssg}]\nmessage_subject = [{prevous_subj}]"
 
     # writing new settigns
@@ -162,7 +225,7 @@ messages\nmessage_content = [{prevous_mssg}]\nmessage_subject = [{prevous_subj}]
         mssg_content = ('"{0}"'.format(mssg_content))
         mssg_sub = ('"{0}"'.format(mssg_sub))
         costom_set = f"# THIS FILE IS NOT TO BE EXECUTED\n# THIS FILE IS TO BE EDITED ONLY FROM main.py\
-        \n\n# supports multiple emails\nsenders_emails = [{prevous_gmail}]\nsenders_passwords = [{prevous_pass}]\n\n# supports multiple \
+\n\n# supports multiple emails\nsenders_emails = [{prevous_gmail}]\nsenders_passwords = [{prevous_pass}]\n\n# supports multiple \
 messages\nmessage_content = [{mssg_content}]\nmessage_subject = [{mssg_sub}]"
     # writing new settigns
         file = open("set.py", "w")
@@ -182,7 +245,7 @@ def show_set():
         exit()
 
 # screen fun time
-def fun_output(to_address):
+def fun_output():
     columns = shutil.get_terminal_size().columns
     output = [" Thank you for using mailer!", "script by:", "its-not-ray on Github"]
     temp = "##"
